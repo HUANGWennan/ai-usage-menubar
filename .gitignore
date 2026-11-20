@@ -1,0 +1,10 @@
+/build/
+.DS_Store
+.env
+.env.*
+*.log
+*.local
+codex-account-snapshots.json
+auth.json
+config.json
+*.sqlite*
