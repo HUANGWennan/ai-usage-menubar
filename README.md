@@ -1,5 +1,10 @@
 # AI Usage Menubar
 
+[中文](#chinese) · [English](#english)
+
+<a name="chinese"></a>
+## 中文
+
 在 macOS 菜单栏并排显示四项：
 
 **GPT/Codex 剩余额度 → GPT 五小时窗口倒计时 → DeepSeek API 余额 → DeepSeek 峰谷切换**
@@ -20,3 +25,25 @@
 - 账号、API 密钥和用量历史由 CodexBar 管理。仓库仅包含代码、安装说明和使用合成数据的测试。
 
 在 macOS 上运行 `./tests/check.sh` 可构建并验证重置时间、峰谷边界和节假日逻辑。测试无需账号或密钥。
+
+---
+
+<a name="english"></a>
+## English
+
+Displays four items side by side in the macOS menu bar: **GPT/Codex quota remaining → GPT five-hour reset countdown → DeepSeek API balance → DeepSeek peak/off-peak switch**.
+
+[CodexBar](https://github.com/steipete/CodexBar) supplies quota and balance data. This repository provides a standalone GPT countdown app, a DeepSeek pricing-period plugin for [SwiftBar](https://github.com/swiftbar/SwiftBar), and setup instructions. Both timers run locally without making network requests themselves.
+
+### Installation
+
+1. Install CodexBar and SwiftBar. Enable Codex and DeepSeek in CodexBar, sign in to Codex, and enter your own DeepSeek API key in its provider settings. Use separate provider icons, showing the session or weekly percentage for Codex and the balance for DeepSeek. See [menu-bar layout](https://github.com/steipete/CodexBar/blob/main/docs/ui.md) and [DeepSeek setup](https://github.com/steipete/CodexBar/blob/main/docs/deepseek.md).
+2. Run `./build.sh` in this repository with the Xcode Command Line Tools installed (`xcode-select --install`). Move `build/GPT Quota Countdown.app` into Applications and open it. Add it to Login Items if you want it to launch automatically.
+3. Copy `deepseek/deepseek-pricing.1m.sh` into the SwiftBar plugin folder, keep it executable, and refresh SwiftBar. Two red coins mark peak pricing; one green coin marks off-peak pricing. By default it displays the next switch in your local time zone and redraws at the pricing boundary. To show a live countdown, change the default for `DEEPSEEK_SWITCH_FORMAT` from `time` to `countdown` near the top of the script.
+4. Hold Command and drag the menu-bar icons into the order above.
+
+### Data and timing
+
+- GPT reads the first record in the current macOS user's local CodexBar snapshot and shows `—` if compatible data is unavailable. For multiple Codex accounts, a supported CodexBar build can instead use its `Session → Resets in` field to follow the selected account.
+- The DeepSeek timer tracks API pricing windows. It computes them in Beijing time with the Chinese holiday calendar, then converts them to the Mac's time zone. The bundled holiday data covers 2026–2027. See [official pricing](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/).
+- CodexBar manages accounts, keys, and usage history. This repository ships code, documentation, and synthetic test data only. Run `./tests/check.sh` on macOS to check reset timestamps, pricing boundaries, and holidays without credentials.
